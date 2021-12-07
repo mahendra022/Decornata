@@ -1,4 +1,5 @@
 import 'package:decornata/models/product_model.dart';
+import 'package:decornata/utilitis/color.dart';
 import 'package:flutter/material.dart';
 
 class ProductTile extends StatelessWidget {
@@ -30,10 +31,14 @@ class ProductTile extends StatelessWidget {
                 ),
                 Positioned(
                     right: 0,
+                    bottom: 0,
                     child: CircleAvatar(
                       backgroundColor: Colors.white,
                       child: IconButton(
-                        icon: Icon(Icons.favorite_border),
+                        icon: Icon(
+                          Icons.favorite_border,
+                          color: Colors.red[300],
+                        ),
                         onPressed: () {
                           print('hai');
                         },
@@ -45,36 +50,85 @@ class ProductTile extends StatelessWidget {
             Text(
               product.name!,
               maxLines: 2,
+              textAlign: TextAlign.center,
               style:
-                  TextStyle(fontFamily: 'avenir', fontWeight: FontWeight.w800),
+                  TextStyle(fontWeight: FontWeight.w400, color: Colors.black87),
               overflow: TextOverflow.ellipsis,
             ),
             SizedBox(height: 8),
-            if (product.rating != null)
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.green,
-                  borderRadius: BorderRadius.circular(12),
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                  child: Text('\$ ${product.price}',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 15, color: color1)),
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      product.rating.toString(),
-                      style: TextStyle(color: Colors.white),
+              ],
+            ),
+            SizedBox(height: 10),
+            product.rating != null
+                ? Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    Icon(
-                      Icons.star,
-                      size: 16,
-                      color: Colors.white,
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.star,
+                          size: 16,
+                          color: color2,
+                        ),
+                        Text(
+                          '${product.rating.toString()}  |  ${product.id} reviews',
+                          style: TextStyle(color: Colors.black54, fontSize: 12),
+                        ),
+                      ],
                     ),
-                  ],
+                  )
+                : Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.star,
+                          size: 16,
+                          color: color2,
+                        ),
+                        Text(
+                          '0.0 | 0 reviews',
+                          style: TextStyle(color: Colors.black54, fontSize: 12),
+                        ),
+                      ],
+                    ),
+                  ),
+            SizedBox(height: 10),
+            Center(
+                child: SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {},
+                child: Text(
+                  'ADD TO CART',
+                  style: TextStyle(fontSize: 10),
+                ),
+                style: ElevatedButton.styleFrom(
+                  primary: color1, //background color of button
+                  //border width and color
+                  elevation: 3, //elevation of button
+                  shape: RoundedRectangleBorder(
+                      //to set border radius to button
+                      borderRadius: BorderRadius.circular(
+                          5)), //content padding inside button
                 ),
               ),
-            SizedBox(height: 8),
-            Text('\$${product.price}',
-                style: TextStyle(fontSize: 32, fontFamily: 'avenir')),
+            )),
           ],
         ),
       ),
