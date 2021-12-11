@@ -4,6 +4,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:decornata/controllers/productController.dart';
 import 'package:decornata/utilitis/color.dart';
 import 'package:decornata/utilitis/widget.dart';
+import 'package:decornata/views/detailProduct.dart';
 import 'package:decornata/views/productTile.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter/material.dart';
@@ -105,66 +106,120 @@ class Home extends StatelessWidget {
   }
 
   Widget _viewProduct(context) {
-    return Expanded(
-        child: ChangeNotifierProvider<ProductController>(
-            create: (context) => ProductController(),
-            child: Consumer<ProductController>(builder: (context, provider, _) {
-              if (provider.allProduct == null) {
-                provider.fatchProduct();
-                return Center(
-                    child: CircularProgressIndicator(
-                  backgroundColor: Colors.black38,
-                  color: Colors.cyan[600],
-                  strokeWidth: 3,
-                ));
-              }
-              return StaggeredGridView.countBuilder(
+    return ChangeNotifierProvider<ProductController>(
+        create: (context) => ProductController(),
+        child: Consumer<ProductController>(builder: (context, provider, _) {
+          if (provider.allProduct == null) {
+            provider.fatchProduct();
+            return Container(
+              height: MediaQuery.of(context).size.height / 2,
+              child: Center(
+                  child: CircularProgressIndicator(
+                backgroundColor: Colors.black38,
+                color: color1,
+                strokeWidth: 4,
+              )),
+            );
+          }
+          return Column(
+            children: [
+              StaggeredGridView.countBuilder(
                   physics: BouncingScrollPhysics(),
                   crossAxisCount: 2,
-                  itemCount: provider.allProduct!.length,
+                  shrinkWrap: true,
+                  itemCount: 8,
                   mainAxisSpacing: 8,
                   crossAxisSpacing: 8,
                   itemBuilder: (context, index) {
                     return ProductTile(provider.allProduct![index]);
                   },
-                  staggeredTileBuilder: (index) => StaggeredTile.fit(1));
-            })));
+                  staggeredTileBuilder: (index) => StaggeredTile.fit(1)),
+              SizedBox(height: 10),
+              Center(
+                  child: Container(
+                margin: EdgeInsets.symmetric(horizontal: 5),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    child: Text(
+                      'See More',
+                      style: TextStyle(fontSize: 15),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      primary: color1, //background color of button
+                      //border width and color
+                      elevation: 3, //elevation of button
+                      shape: RoundedRectangleBorder(
+                          //to set border radius to button
+                          borderRadius: BorderRadius.circular(
+                              5)), //content padding inside button
+                    ),
+                  ),
+                ),
+              )),
+              SizedBox(height: 10),
+            ],
+          );
+        }));
   }
 
   Widget _initHome(context) {
     return Container(
-      margin: EdgeInsets.only(left: 10, right: 10),
-      child: Column(
-        children: [
-          Container(
-            height: 100,
-            width: MediaQuery.of(context).size.width,
-            child: CarouselSlider(
-              options: CarouselOptions(
-                autoPlay: true,
-                autoPlayInterval: Duration(seconds: 8),
-                autoPlayAnimationDuration: Duration(milliseconds: 1000),
-                autoPlayCurve: Curves.fastOutSlowIn,
-                pauseAutoPlayOnTouch: true,
-                enlargeCenterPage: true,
-                viewportFraction: 1,
-              ),
-              items: cardNotif.map((item) {
-                return Container(
-                  width: MediaQuery.of(context).size.width,
-                  padding: EdgeInsets.only(left: 10, right: 10),
-                  decoration:
-                      BoxDecoration(borderRadius: BorderRadius.circular(5.0)),
-                  child: Image.network(
-                    item,
-                    fit: BoxFit.cover,
-                  ),
-                );
-              }).toList(),
+      margin: EdgeInsets.symmetric(horizontal: 12),
+      child: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
+        child: Column(
+          children: [
+            SizedBox(
+              height: 10,
             ),
-          ),
-          _viewProduct(context),
-        ],
+            Container(
+              height: 150,
+              width: MediaQuery.of(context).size.width,
+              child: CarouselSlider(
+                options: CarouselOptions(
+                  autoPlay: true,
+                  autoPlayInterval: Duration(seconds: 8),
+                  autoPlayAnimationDuration: Duration(milliseconds: 1000),
+                  autoPlayCurve: Curves.fastOutSlowIn,
+                  pauseAutoPlayOnTouch: true,
+                  enlargeCenterPage: true,
+                  viewportFraction: 1,
+                ),
+                items: cardNotif.map((item) {
+                  return Container(
+                    width: MediaQuery.of(context).size.width,
+                    padding: EdgeInsets.symmetric(horizontal: 4),
+                    child: Image.network(
+                      item,
+                      fit: BoxFit.fill,
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Container(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'Best Product',
+                style: TextStyle(
+                    fontSize: 20,
+                    letterSpacing: 2,
+                    fontWeight: FontWeight.w600,
+                    color: color1),
+              ),
+            ),
+            SizedBox(
+              height: 5,
+            ),
+            _viewProduct(context),
+          ],
+        ),
       ),
     );
   }
