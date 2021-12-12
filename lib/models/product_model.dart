@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 
 List<Product> productFromJson(String str) =>
     List<Product>.from(json.decode(str).map((x) => Product.fromJson(x)));
@@ -6,9 +7,9 @@ List<Product> productFromJson(String str) =>
 String productToJson(List<Product> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
-class Product {
+class Product with ChangeNotifier {
   Product({
-    required this.id,
+    this.id,
     this.brand,
     this.name,
     this.price,
@@ -25,9 +26,10 @@ class Product {
     this.productApiUrl,
     this.apiFeaturedImage,
     this.productColors,
+    this.isFavorite = false,
   });
 
-  int id;
+  int? id;
   Brand? brand;
   String? name;
   String? price;
@@ -44,6 +46,7 @@ class Product {
   String? productApiUrl;
   String? apiFeaturedImage;
   List<ProductColor>? productColors;
+  bool isFavorite;
 
   factory Product.fromJson(Map<String, dynamic> json) => Product(
         id: json["id"],
@@ -86,6 +89,11 @@ class Product {
         "product_colors":
             List<dynamic>.from(productColors!.map((x) => x.toJson())),
       };
+
+  void statusFavorite() {
+    isFavorite = !isFavorite;
+    notifyListeners();
+  }
 }
 
 enum Brand { MAYBELLINE }

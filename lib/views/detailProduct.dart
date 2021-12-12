@@ -1,13 +1,244 @@
+import 'package:decornata/controllers/cartController.dart';
 import 'package:decornata/models/product_model.dart';
+import 'package:decornata/utilitis/alert.dart';
+import 'package:decornata/utilitis/animation.dart';
 import 'package:decornata/utilitis/color.dart';
+import 'package:decornata/utilitis/widget.dart';
+import 'package:decornata/views/cart.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+final _route = AnimationRoute();
 
 class DetailProduct extends StatelessWidget {
-  const DetailProduct({Key? key, required this.product}) : super(key: key);
+  Widget _navbar(context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            Container(
+              margin: EdgeInsets.only(left: 10, bottom: 5),
+              child: IconButton(
+                  icon: Icon(
+                    Icons.arrow_back,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  }),
+            ),
+            Container(
+                margin: EdgeInsets.only(left: 10, bottom: 5),
+                child: Text(
+                  'ITEM DETAIL',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      letterSpacing: 2,
+                      fontWeight: FontWeight.w700),
+                )),
+          ],
+        ),
+        SizedBox(
+          width: 10,
+        ),
+        Row(
+          children: [
+            Container(
+              margin: EdgeInsets.only(top: 5),
+              child: SizedBox(
+                  height: 40,
+                  width: 40,
+                  child: Consumer<CartController>(
+                    builder: (context, value, child) => Badge(
+                      value: value.mountQty.toString(),
+                      color: Colors.amber,
+                      child: IconButton(
+                          splashColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          padding: EdgeInsets.all(0),
+                          icon: Icon(
+                            Icons.favorite_border,
+                            color: Colors.white,
+                          ),
+                          onPressed: () {
+                            Navigator.of(context)
+                                .push(_route.sliderDown(Cart()));
+                          }),
+                    ),
+                  )),
+            ),
+            Container(
+              margin: EdgeInsets.only(right: 10, top: 5),
+              child: SizedBox(
+                  height: 40,
+                  width: 40,
+                  child: Consumer<CartController>(
+                    builder: (context, value, child) => Badge(
+                      value: value.mountQty.toString(),
+                      color: Colors.amber,
+                      child: IconButton(
+                          splashColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          padding: EdgeInsets.all(0),
+                          icon: Icon(
+                            Icons.shopping_bag_outlined,
+                            color: Colors.white,
+                          ),
+                          onPressed: () {
+                            Navigator.of(context)
+                                .push(_route.sliderDown(Cart()));
+                          }),
+                    ),
+                  )),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
 
-  final Product product;
+  Widget _tagLine(context) {
+    final product = Provider.of<Product>(context, listen: false);
+    return Column(
+      children: [
+        Container(
+            child: Column(
+          children: [
+            Container(
+              alignment: Alignment.topLeft,
+              child: Text(
+                '\$ ${product.price}',
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                    fontSize: 25, fontWeight: FontWeight.w900, color: color1),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width / 2,
+                  child: Text(
+                    product.name!,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w800,
+                        color: Colors.black87.withAlpha(180)),
+                  ),
+                ),
+                Column(
+                  children: [
+                    Container(
+                      child: Consumer<Product>(
+                        builder: (context, product, child) => IconButton(
+                          highlightColor: Colors.transparent,
+                          hoverColor: Colors.transparent,
+                          splashColor: Colors.transparent,
+                          icon: !product.isFavorite
+                              ? Icon(
+                                  Icons.favorite_border,
+                                )
+                              : Icon(
+                                  Icons.favorite,
+                                ),
+                          color: Colors.red[300],
+                          onPressed: () {
+                            product.statusFavorite();
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                product.rating != null
+                    ? Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        padding: const EdgeInsets.only(right: 10),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.star,
+                              size: 16,
+                              color: color2,
+                            ),
+                            Text(
+                              ' ${product.rating.toString()}  |  Sold ${product.id}',
+                              style: TextStyle(
+                                  color: Colors.black54, fontSize: 14),
+                            ),
+                          ],
+                        ),
+                      )
+                    : Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 4, vertical: 2),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.star,
+                              size: 16,
+                              color: color2,
+                            ),
+                            Text(
+                              '0.0 | 0 reviews',
+                              style: TextStyle(
+                                  color: Colors.black54, fontSize: 12),
+                            ),
+                          ],
+                        ),
+                      ),
+              ],
+            )
+          ],
+        )),
+      ],
+    );
+  }
+
+  Widget _description(context) {
+    final product = Provider.of<Product>(context, listen: false);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            'Description',
+            style: TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 20,
+                letterSpacing: 1.3,
+                color: color1),
+          ),
+        ),
+        Container(
+            child: Text(
+          product.description!,
+          style: TextStyle(color: Colors.black54),
+        ))
+      ],
+    );
+  }
 
   Widget _detailProduct(context) {
+    final product = Provider.of<Product>(context, listen: false);
     return Container(
         child: Column(
       children: [
@@ -35,72 +266,24 @@ class DetailProduct extends StatelessWidget {
             ),
           ),
         ),
-        Container(
-            margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  width: MediaQuery.of(context).size.width / 2,
-                  child: Text(
-                    product.name!,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w800,
-                        color: Colors.black87.withAlpha(180)),
-                  ),
-                ),
-                Column(
-                  children: [
-                    Container(
-                      alignment: Alignment.bottomRight,
-                      child: Text(
-                        '\$ ${product.price}',
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                            fontSize: 25,
-                            fontWeight: FontWeight.w900,
-                            color: color1),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            )),
+        SizedBox(
+          height: 20,
+        ),
+        _tagLine(context),
+        SizedBox(
+          height: 20,
+        ),
+        _description(context),
       ],
     ));
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: color1,
-        leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-            }),
-        title: Text(
-          'ITEM DETAILS',
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-              color: Colors.white,
-              letterSpacing: 2,
-              fontWeight: FontWeight.w600,
-              fontSize: 17),
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: SizedBox(
+  Widget _navbarBottom(context) {
+    final product = Provider.of<Product>(context, listen: false);
+    final cart = Provider.of<CartController>(context, listen: false);
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 20),
+      child: SizedBox(
         height: 70,
         width: MediaQuery.of(context).size.width / 1.1,
         child: Row(
@@ -112,7 +295,14 @@ class DetailProduct extends StatelessWidget {
                   topLeft: Radius.circular(10)),
               child: InkWell(
                 onTap: () {
-                  print('add Cart');
+                  cart.addCart(product.id.toString(), product.name!,
+                      product.price!, product.imageLink!);
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: Colors.transparent,
+                    duration: const Duration(milliseconds: 1800),
+                    elevation: 0,
+                    content: SnackBarSuccess(title: "Product add to cart"),
+                  ));
                 },
                 child: const SizedBox(
                   height: kToolbarHeight,
@@ -163,7 +353,24 @@ class DetailProduct extends StatelessWidget {
           ],
         ),
       ),
-      body: SingleChildScrollView(child: _detailProduct(context)),
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: color1,
+          bottom: PreferredSize(
+            preferredSize: Size.fromHeight(5),
+            child: Center(child: _navbar(context)),
+          ),
+        ),
+        body: SingleChildScrollView(
+            child: Container(
+                margin: EdgeInsets.symmetric(horizontal: 20),
+                child: _detailProduct(context))),
+        bottomNavigationBar: _navbarBottom(context));
   }
 }

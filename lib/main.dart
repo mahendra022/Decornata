@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import 'controllers/cartController.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // change colors status bar app
@@ -26,6 +28,9 @@ class MyApp extends StatelessWidget {
         providers: [
           ChangeNotifierProvider<ProductController>(
             create: (context) => ProductController(),
+          ),
+          ChangeNotifierProvider<CartController>(
+            create: (context) => CartController(),
           ),
         ],
         child: MaterialApp(

@@ -1,21 +1,24 @@
+import 'package:decornata/controllers/cartController.dart';
 import 'package:decornata/models/product_model.dart';
+import 'package:decornata/utilitis/alert.dart';
 import 'package:decornata/utilitis/animation.dart';
 import 'package:decornata/utilitis/color.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'detailProduct.dart';
 
 final _route = AnimationRoute();
 
 class ProductTile extends StatelessWidget {
-  final Product product;
-  const ProductTile(this.product);
-
   @override
   Widget build(BuildContext context) {
+    final product = Provider.of<Product>(context, listen: false);
+    final cart = Provider.of<CartController>(context, listen: false);
     return GestureDetector(
       onTap: () {
-        Navigator.of(context)
-            .push(_route.sliderDown(DetailProduct(product: product)));
+        Navigator.of(context).push(_route.sliderDown(
+            ChangeNotifierProvider.value(
+                value: product, child: DetailProduct())));
       },
       child: Card(
         elevation: 2,
@@ -43,14 +46,23 @@ class ProductTile extends StatelessWidget {
                       bottom: 0,
                       child: CircleAvatar(
                         backgroundColor: Colors.white,
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.favorite_border,
+                        child: Consumer<Product>(
+                          builder: (context, product, child) => IconButton(
+                            highlightColor: Colors.transparent,
+                            hoverColor: Colors.transparent,
+                            splashColor: Colors.transparent,
+                            icon: !product.isFavorite
+                                ? Icon(
+                                    Icons.favorite_border,
+                                  )
+                                : Icon(
+                                    Icons.favorite,
+                                  ),
                             color: Colors.red[300],
+                            onPressed: () {
+                              product.statusFavorite();
+                            },
                           ),
-                          onPressed: () {
-                            print('hai');
-                          },
                         ),
                       )),
                 ],
@@ -124,7 +136,16 @@ class ProductTile extends StatelessWidget {
                   child: SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    cart.addCart(product.id.toString(), product.name!,
+                        product.price!, product.imageLink!);
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      backgroundColor: Colors.transparent,
+                      duration: const Duration(milliseconds: 1800),
+                      elevation: 0,
+                      content: SnackBarSuccess(title: "Product add to cart"),
+                    ));
+                  },
                   child: Text(
                     'ADD TO CART',
                     style: TextStyle(fontSize: 10),

@@ -1,10 +1,12 @@
 import 'dart:ui';
 
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:decornata/controllers/cartController.dart';
 import 'package:decornata/controllers/productController.dart';
+import 'package:decornata/utilitis/animation.dart';
 import 'package:decornata/utilitis/color.dart';
 import 'package:decornata/utilitis/widget.dart';
-import 'package:decornata/views/detailProduct.dart';
+import 'package:decornata/views/cart.dart';
 import 'package:decornata/views/productTile.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter/material.dart';
@@ -15,8 +17,14 @@ List<String> cardNotif = [
   'http://blog.fotor.com/wp-content/uploads/2017/09/font.jpg',
   'https://miro.medium.com/max/10008/1*9D-ZU7QWEO8w4iKF_IpZpA.jpeg',
 ];
+final _route = AnimationRoute();
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
+  @override
+  _HomeState createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
   Widget _navbar(context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -62,20 +70,23 @@ class Home extends StatelessWidget {
               child: SizedBox(
                   height: 40,
                   width: 40,
-                  child: Badge(
-                    value: '0',
-                    color: Colors.amber,
-                    child: IconButton(
-                        splashColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                        padding: EdgeInsets.all(0),
-                        icon: Icon(
-                          Icons.favorite_border,
-                          color: Colors.white,
-                        ),
-                        onPressed: () {
-                          print('cart');
-                        }),
+                  child: Consumer<CartController>(
+                    builder: (context, value, child) => Badge(
+                      value: value.mountQty.toString(),
+                      color: Colors.amber,
+                      child: IconButton(
+                          splashColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          padding: EdgeInsets.all(0),
+                          icon: Icon(
+                            Icons.favorite_border,
+                            color: Colors.white,
+                          ),
+                          onPressed: () {
+                            Navigator.of(context)
+                                .push(_route.sliderDown(Cart()));
+                          }),
+                    ),
                   )),
             ),
             Container(
@@ -83,20 +94,23 @@ class Home extends StatelessWidget {
               child: SizedBox(
                   height: 40,
                   width: 40,
-                  child: Badge(
-                    value: '0',
-                    color: Colors.amber,
-                    child: IconButton(
-                        splashColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                        padding: EdgeInsets.all(0),
-                        icon: Icon(
-                          Icons.shopping_bag_outlined,
-                          color: Colors.white,
-                        ),
-                        onPressed: () {
-                          print('cart');
-                        }),
+                  child: Consumer<CartController>(
+                    builder: (context, value, child) => Badge(
+                      value: value.mountQty.toString(),
+                      color: Colors.amber,
+                      child: IconButton(
+                          splashColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          padding: EdgeInsets.all(0),
+                          icon: Icon(
+                            Icons.shopping_bag_outlined,
+                            color: Colors.white,
+                          ),
+                          onPressed: () {
+                            Navigator.of(context)
+                                .push(_route.sliderDown(Cart()));
+                          }),
+                    ),
                   )),
             ),
           ],
@@ -106,63 +120,62 @@ class Home extends StatelessWidget {
   }
 
   Widget _viewProduct(context) {
-    return ChangeNotifierProvider<ProductController>(
-        create: (context) => ProductController(),
-        child: Consumer<ProductController>(builder: (context, provider, _) {
-          if (provider.allProduct == null) {
-            provider.fatchProduct();
-            return Container(
-              height: MediaQuery.of(context).size.height / 2,
-              child: Center(
-                  child: CircularProgressIndicator(
-                backgroundColor: Colors.black38,
-                color: color1,
-                strokeWidth: 4,
-              )),
-            );
-          }
-          return Column(
-            children: [
-              StaggeredGridView.countBuilder(
-                  physics: BouncingScrollPhysics(),
-                  crossAxisCount: 2,
-                  shrinkWrap: true,
-                  itemCount: 8,
-                  mainAxisSpacing: 8,
-                  crossAxisSpacing: 8,
-                  itemBuilder: (context, index) {
-                    return ProductTile(provider.allProduct![index]);
-                  },
-                  staggeredTileBuilder: (index) => StaggeredTile.fit(1)),
-              SizedBox(height: 10),
-              Center(
-                  child: Container(
-                margin: EdgeInsets.symmetric(horizontal: 5),
-                child: SizedBox(
-                  width: double.infinity,
-                  height: 50,
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    child: Text(
-                      'See More',
-                      style: TextStyle(fontSize: 15),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      primary: color1, //background color of button
-                      //border width and color
-                      elevation: 3, //elevation of button
-                      shape: RoundedRectangleBorder(
-                          //to set border radius to button
-                          borderRadius: BorderRadius.circular(
-                              5)), //content padding inside button
-                    ),
-                  ),
-                ),
-              )),
-              SizedBox(height: 10),
-            ],
-          );
-        }));
+    final productData = Provider.of<ProductController>(context);
+    final allProduct = productData.allProduct;
+    if (allProduct == null) {
+      productData.fatchProduct();
+      return Container(
+        height: MediaQuery.of(context).size.height / 2,
+        child: Center(
+            child: CircularProgressIndicator(
+          backgroundColor: Colors.black38,
+          color: color1,
+          strokeWidth: 4,
+        )),
+      );
+    }
+    return Column(
+      children: [
+        StaggeredGridView.countBuilder(
+            physics: BouncingScrollPhysics(),
+            crossAxisCount: 2,
+            shrinkWrap: true,
+            itemCount: 8,
+            mainAxisSpacing: 8,
+            crossAxisSpacing: 8,
+            itemBuilder: (context, index) {
+              return ChangeNotifierProvider.value(
+                  value: allProduct[index], child: ProductTile());
+            },
+            staggeredTileBuilder: (index) => StaggeredTile.fit(1)),
+        SizedBox(height: 10),
+        Center(
+            child: Container(
+          margin: EdgeInsets.symmetric(horizontal: 5),
+          child: SizedBox(
+            width: double.infinity,
+            height: 50,
+            child: ElevatedButton(
+              onPressed: () {},
+              child: Text(
+                'See More',
+                style: TextStyle(fontSize: 15),
+              ),
+              style: ElevatedButton.styleFrom(
+                primary: color1, //background color of button
+                //border width and color
+                elevation: 3, //elevation of button
+                shape: RoundedRectangleBorder(
+                    //to set border radius to button
+                    borderRadius: BorderRadius.circular(
+                        5)), //content padding inside button
+              ),
+            ),
+          ),
+        )),
+        SizedBox(height: 10),
+      ],
+    );
   }
 
   Widget _initHome(context) {
