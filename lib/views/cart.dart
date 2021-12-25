@@ -7,7 +7,6 @@ import 'package:provider/provider.dart';
 
 class Cart extends StatelessWidget {
   Widget _navbarBottom(context) {
-    final cart = Provider.of<CartController>(context);
     return Container(
       child: SizedBox(
         height: 100,
@@ -37,15 +36,17 @@ class Cart extends StatelessWidget {
                     ),
                     SizedBox(
                       height: kToolbarHeight,
-                      child: Center(
-                        child: Text(
-                          '\$${cart.mountPrice.toString()}',
-                          style: TextStyle(
-                            fontFamily: 'Sen',
-                            fontSize: 20,
-                            letterSpacing: 2,
-                            color: color1,
-                            fontWeight: FontWeight.bold,
+                      child: Consumer<CartController>(
+                        builder: (context, value, child) => Center(
+                          child: Text(
+                            '\$${value.mount.toStringAsFixed(2)}',
+                            style: TextStyle(
+                              fontFamily: 'Sen',
+                              fontSize: 20,
+                              letterSpacing: 2,
+                              color: color1,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ),
@@ -77,9 +78,7 @@ class Cart extends StatelessWidget {
   }
 
   Widget _tableData(context) {
-    final cart = Provider.of<CartController>(
-      context,
-    );
+    final cart = Provider.of<CartController>(context, listen: true);
     final items = cart.items.values.toList();
     if (items.isEmpty) {
       return Container(
@@ -104,7 +103,10 @@ class Cart extends StatelessWidget {
                 builder: (context, product, child) => CheckboxListTile(
                   controlAffinity: ListTileControlAffinity.leading,
                   value: product.selected,
-                  onChanged: (value) => product.statusSelected(),
+                  onChanged: (value) {
+                    product.statusSelected();
+                    cart.getMount(product.selected, items[index]);
+                  },
                   title: Column(
                     children: [
                       Row(
@@ -162,7 +164,9 @@ class Cart extends StatelessWidget {
                                     ),
                                     IconButton(
                                         onPressed: () {
-                                          cart.deleteCart(items[index].id!);
+                                          product.selected = false;
+                                          cart.deleteCart(items[index].id!,
+                                              items[index], product.selected);
                                           ScaffoldMessenger.of(context)
                                               .showSnackBar(SnackBar(
                                             backgroundColor: Colors.transparent,

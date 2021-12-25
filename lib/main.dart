@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'controllers/cartController.dart';
+import 'models/cart_model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

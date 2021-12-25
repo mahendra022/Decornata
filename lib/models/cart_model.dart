@@ -14,7 +14,7 @@ class CartModel with ChangeNotifier {
       this.price,
       this.image,
       this.qty,
-      this.selected = true});
+      this.selected = false});
 
   void statusSelected() {
     selected = !selected;
