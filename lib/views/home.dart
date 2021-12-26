@@ -26,6 +26,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   Widget _navbar(context) {
+    final productData = Provider.of<ProductController>(context);
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -107,8 +108,10 @@ class _HomeState extends State<Home> {
                             color: Colors.white,
                           ),
                           onPressed: () {
-                            Navigator.of(context)
-                                .push(_route.sliderDown(Cart()));
+                            Navigator.of(context).push(_route.sliderDown(
+                                new ChangeNotifierProvider.value(
+                                    value: productData.allProduct![1],
+                                    child: Cart())));
                           }),
                     ),
                   )),

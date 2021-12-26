@@ -21,6 +21,11 @@ class CartController with ChangeNotifier {
     notifyListeners();
   }
 
+  void resetMount() {
+    mount = 0.0;
+  }
+
+  // add product to cart
   void addCart(String productId, String title, String price, String image) {
     if (_items.containsKey(productId)) {
       _items.update(
@@ -51,7 +56,12 @@ class CartController with ChangeNotifier {
       mount = 0.0;
     } else if (items.isEmpty) {
       mount = 0.0;
-    } else if (items.isNotEmpty && select == false) {
+    } else if (items.isNotEmpty &&
+        select == false &&
+        data.selected == false &&
+        mount < 0.0) {
+      mount -= data.qty! * double.parse(data.price!);
+    } else {
       mount -= data.qty! * double.parse(data.price!);
     }
     print(mount);

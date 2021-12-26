@@ -1,4 +1,5 @@
 import 'package:decornata/controllers/productController.dart';
+import 'package:decornata/models/product_model.dart';
 import 'package:decornata/views/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
