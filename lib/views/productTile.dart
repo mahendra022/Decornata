@@ -139,12 +139,12 @@ class ProductTile extends StatelessWidget {
                   onPressed: () {
                     cart.addCart(product.id.toString(), product.name!,
                         product.price!, product.imageLink!);
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      backgroundColor: Colors.transparent,
-                      duration: const Duration(milliseconds: 1800),
-                      elevation: 0,
-                      content: SnackBarSuccess(title: "Product add to cart"),
-                    ));
+                    // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    //   backgroundColor: Colors.transparent,
+                    //   duration: const Duration(milliseconds: 1800),
+                    //   elevation: 0,
+                    //   content: SnackBarSuccess(title: "Product add to cart"),
+                    // ));
                   },
                   child: Text(
                     'ADD TO CART',

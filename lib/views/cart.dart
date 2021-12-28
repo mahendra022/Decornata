@@ -1,6 +1,5 @@
 import 'package:decornata/controllers/cartController.dart';
 import 'package:decornata/models/cart_model.dart';
-import 'package:decornata/models/product_model.dart';
 import 'package:decornata/utilitis/alert.dart';
 import 'package:decornata/utilitis/color.dart';
 import 'package:flutter/material.dart';
@@ -80,7 +79,6 @@ class Cart extends StatelessWidget {
 
   Widget _tableData(context) {
     final cart = Provider.of<CartController>(context, listen: true);
-    final products = Provider.of<Product>(context);
     final items = cart.items.values.toList();
     if (items.isEmpty) {
       return Container(
@@ -184,11 +182,11 @@ class Cart extends StatelessWidget {
                                   ),
                                   GestureDetector(
                                     onTap: () {
-                                      cart.addCart(
-                                          products.id.toString(),
-                                          products.name.toString(),
-                                          products.price.toString(),
-                                          products.imageLink.toString());
+                                      cart.addQuantity(
+                                          items[index].id.toString(),
+                                          items[index].title.toString(),
+                                          items[index].price.toString(),
+                                          items[index].image.toString());
                                     },
                                     child: Container(
                                       decoration: BoxDecoration(

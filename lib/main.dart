@@ -1,12 +1,10 @@
 import 'package:decornata/controllers/productController.dart';
-import 'package:decornata/models/product_model.dart';
 import 'package:decornata/views/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'controllers/cartController.dart';
-import 'models/cart_model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

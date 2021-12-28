@@ -11,13 +11,14 @@ class CartController with ChangeNotifier {
   int get mountQty => _items.length;
 
   void getMount(bool id, CartModel data) {
-    if (id == false) {
-      mount -= data.qty! * double.parse(data.price!);
-    } else if (id == true) {
-      mount += data.qty! * double.parse(data.price!);
+    if (id == true) {
+      mount += data.qty! * num.parse(data.price!).roundToDouble();
+    } else if (id == false) {
+      mount -= data.qty! * num.parse(data.price!).roundToDouble();
     } else {
       mount = 0.0;
     }
+    print(mount);
     notifyListeners();
   }
 
@@ -40,31 +41,41 @@ class CartController with ChangeNotifier {
       _items.putIfAbsent(
           productId,
           () => CartModel(
-              id: DateTime.now().toString(),
-              title: title,
-              price: price,
-              image: image,
-              qty: 1));
+              id: productId, title: title, price: price, image: image, qty: 1));
     }
+    notifyListeners();
+  }
+
+  void addQuantity(String productId, String title, String price, String image) {
+    _items.update(
+        productId,
+        (value) => CartModel(
+            id: value.id,
+            title: value.title,
+            price: value.price,
+            image: value.image,
+            qty: value.qty! + 1));
+
     notifyListeners();
   }
 
   // delete product on cart
   void deleteCart(String productId, CartModel data, bool select) {
     _items.removeWhere((key, value) => value.id == productId);
-    if (mount == 0.0) {
+    if (select == true) {
+      mount = 0.0;
+    } else if (mount < 0.0) {
       mount = 0.0;
     } else if (items.isEmpty) {
       mount = 0.0;
-    } else if (items.isNotEmpty &&
-        select == false &&
-        data.selected == false &&
-        mount < 0.0) {
+    } else if (items.isNotEmpty && select == false && mount > 0.0) {
+      print('Select 1');
       mount -= data.qty! * double.parse(data.price!);
-    } else {
+    } else if (select == true && mount < 0) {
+      print('Select 2');
       mount -= data.qty! * double.parse(data.price!);
     }
-    print(mount);
+    print('Update mount : $mount');
     notifyListeners();
   }
 }
