@@ -111,15 +111,18 @@ class Cart extends StatelessWidget {
                   title: Column(
                     children: [
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Container(
-                            height: 90,
-                            width: 90,
+                            height: 100,
+                            width: 100,
                             child: Image.network(
                               items[index].image!,
                               fit: BoxFit.cover,
                             ),
+                          ),
+                          SizedBox(
+                            width: 20,
                           ),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -155,7 +158,12 @@ class Cart extends StatelessWidget {
                                   ),
                                   GestureDetector(
                                     onTap: () {
-                                      print(items[index].id.toString());
+                                      if (items[index].qty! > 1) {
+                                        cart.removeQuantity(
+                                            items[index].id.toString());
+                                        cart.getMountQuantity(product.selected,
+                                            true, items[index]);
+                                      }
                                     },
                                     child: Container(
                                       decoration: BoxDecoration(
@@ -183,10 +191,9 @@ class Cart extends StatelessWidget {
                                   GestureDetector(
                                     onTap: () {
                                       cart.addQuantity(
-                                          items[index].id.toString(),
-                                          items[index].title.toString(),
-                                          items[index].price.toString(),
-                                          items[index].image.toString());
+                                          items[index].id.toString());
+                                      cart.getMountQuantity(product.selected,
+                                          false, items[index]);
                                     },
                                     child: Container(
                                       decoration: BoxDecoration(

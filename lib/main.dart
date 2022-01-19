@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
-            fontFamily: 'FontOne',
+            fontFamily: 'FontTwo',
             scaffoldBackgroundColor: Colors.white,
           ),
           home: Home(),

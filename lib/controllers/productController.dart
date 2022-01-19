@@ -7,7 +7,7 @@ class ProductController extends ChangeNotifier {
 
   Future<List<Product>?> getProducts() async {
     var response = await http.get(Uri.parse(
-        'https://makeup-api.herokuapp.com/api/v1/products.json?brand=maybelline'));
+        'https://makeup-api.herokuapp.com/api/v1/products.json?brand=revlon'));
     if (response.statusCode == 200) {
       return productFromJson(response.body);
     }

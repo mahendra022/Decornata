@@ -137,6 +137,7 @@ class _HomeState extends State<Home> {
         StaggeredGridView.countBuilder(
             physics: BouncingScrollPhysics(),
             crossAxisCount: 2,
+            reverse: true,
             shrinkWrap: true,
             itemCount: 8,
             mainAxisSpacing: 8,

@@ -18,7 +18,15 @@ class CartController with ChangeNotifier {
     } else {
       mount = 0.0;
     }
-    print(mount);
+    notifyListeners();
+  }
+
+  void getMountQuantity(bool id, bool minus, CartModel data) {
+    if (id == true && minus == false) {
+      mount = mount + num.parse(data.price!).roundToDouble();
+    } else if (id == true && minus == true) {
+      mount = mount - num.parse(data.price!).roundToDouble();
+    }
     notifyListeners();
   }
 
@@ -46,7 +54,7 @@ class CartController with ChangeNotifier {
     notifyListeners();
   }
 
-  void addQuantity(String productId, String title, String price, String image) {
+  void addQuantity(String productId) {
     _items.update(
         productId,
         (value) => CartModel(
@@ -55,6 +63,19 @@ class CartController with ChangeNotifier {
             price: value.price,
             image: value.image,
             qty: value.qty! + 1));
+
+    notifyListeners();
+  }
+
+  void removeQuantity(String productId) {
+    _items.update(
+        productId,
+        (value) => CartModel(
+            id: value.id,
+            title: value.title,
+            price: value.price,
+            image: value.image,
+            qty: value.qty! - 1));
 
     notifyListeners();
   }
