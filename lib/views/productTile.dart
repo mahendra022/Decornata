@@ -24,7 +24,7 @@ class ProductTile extends StatelessWidget {
         color: color1,
         elevation: 3,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(25.0),
+          borderRadius: BorderRadius.circular(20.0),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -32,13 +32,13 @@ class ProductTile extends StatelessWidget {
             Stack(
               children: [
                 Container(
-                  height: 250,
+                  height: 200,
                   width: double.infinity,
                   clipBehavior: Clip.antiAlias,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(25),
-                        topRight: Radius.circular(25)),
+                        topLeft: Radius.circular(20),
+                        topRight: Radius.circular(20)),
                   ),
                   child: Image.network(
                     product.imageLink!,
@@ -125,7 +125,7 @@ class ProductTile extends StatelessWidget {
                       ],
                     ),
                   ),
-            SizedBox(height: 16),
+            SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -137,7 +137,7 @@ class ProductTile extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 10),
             // Center(
             //     child: SizedBox(
             //   width: double.infinity,

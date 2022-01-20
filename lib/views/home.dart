@@ -11,9 +11,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 List<String> cardNotif = [
-  'http://blog.fotor.com/wp-content/uploads/2017/09/1.jpg',
-  'http://blog.fotor.com/wp-content/uploads/2017/09/font.jpg',
-  'https://miro.medium.com/max/10008/1*9D-ZU7QWEO8w4iKF_IpZpA.jpeg',
+  'https://image.freepik.com/free-vector/hand-painted-makeup-selfcare-web-sale-banner-design-with-beautiful-woman_60389-28.jpg',
+  'https://image.freepik.com/free-vector/vector-realistic-cosmetic-promo-poster_33099-1346.jpg',
+  'https://image.freepik.com/free-psd/top-view-makeup-mock-up-concept_23-2148685167.jpg',
 ];
 final _route = AnimationRoute();
 
@@ -31,19 +31,19 @@ class _HomeState extends State<Home> {
         Container(
           margin: EdgeInsets.only(left: 10, top: 3),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(7),
-            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            color: color4.withOpacity(0.3),
           ),
           child: SizedBox(
             height: 35,
-            width: MediaQuery.of(context).size.width / 1.8,
+            width: MediaQuery.of(context).size.width / 1.6,
             child: Row(
               children: [
                 Container(
                   margin: const EdgeInsets.only(left: 10),
                   child: Icon(
                     Icons.search,
-                    color: Colors.black26,
+                    color: Colors.black87,
                     size: 20,
                   ),
                 ),
@@ -51,7 +51,7 @@ class _HomeState extends State<Home> {
                   margin: const EdgeInsets.only(left: 10),
                   child: Text(
                     'Cari Tatakan',
-                    style: TextStyle(color: Colors.black26),
+                    style: TextStyle(color: Colors.black54),
                   ),
                 )
               ],
@@ -71,14 +71,14 @@ class _HomeState extends State<Home> {
                   child: Consumer<CartController>(
                     builder: (context, value, child) => Badge(
                       value: value.mountQty.toString(),
-                      color: Colors.amber,
+                      color: Colors.red,
                       child: IconButton(
                           splashColor: Colors.transparent,
                           highlightColor: Colors.transparent,
                           padding: EdgeInsets.all(0),
                           icon: Icon(
                             Icons.favorite_border,
-                            color: Colors.white,
+                            color: color4,
                           ),
                           onPressed: () {
                             Navigator.of(context)
@@ -95,14 +95,14 @@ class _HomeState extends State<Home> {
                   child: Consumer<CartController>(
                     builder: (context, value, child) => Badge(
                       value: value.mountQty.toString(),
-                      color: Colors.amber,
+                      color: Colors.red,
                       child: IconButton(
                           splashColor: Colors.transparent,
                           highlightColor: Colors.transparent,
                           padding: EdgeInsets.all(0),
                           icon: Icon(
                             Icons.shopping_bag_outlined,
-                            color: Colors.white,
+                            color: color4,
                           ),
                           onPressed: () {
                             Navigator.of(context)
@@ -206,7 +206,7 @@ class _HomeState extends State<Home> {
                     padding: EdgeInsets.symmetric(horizontal: 4),
                     child: Image.network(
                       item,
-                      fit: BoxFit.fill,
+                      fit: BoxFit.cover,
                     ),
                   );
                 }).toList(),
@@ -218,7 +218,7 @@ class _HomeState extends State<Home> {
             Container(
               alignment: Alignment.centerLeft,
               child: Text(
-                'Best Product',
+                'Recomendation',
                 style: TextStyle(
                     fontSize: 20,
                     letterSpacing: 2,
@@ -242,7 +242,7 @@ class _HomeState extends State<Home> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: color1,
+        backgroundColor: Colors.white,
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(5),
           child: Center(child: _navbar(context)),
