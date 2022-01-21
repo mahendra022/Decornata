@@ -54,7 +54,7 @@ class DetailProduct extends StatelessWidget {
                   child: Consumer<CartController>(
                     builder: (context, value, child) => Badge(
                       value: value.mountQty.toString(),
-                      color: Colors.amber,
+                      color: Colors.red,
                       child: IconButton(
                           splashColor: Colors.transparent,
                           highlightColor: Colors.transparent,
@@ -78,7 +78,7 @@ class DetailProduct extends StatelessWidget {
                   child: Consumer<CartController>(
                     builder: (context, value, child) => Badge(
                       value: value.mountQty.toString(),
-                      color: Colors.amber,
+                      color: Colors.red,
                       child: IconButton(
                           splashColor: Colors.transparent,
                           highlightColor: Colors.transparent,
@@ -368,6 +368,7 @@ class DetailProduct extends StatelessWidget {
           ),
         ),
         body: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
             child: Container(
                 margin: EdgeInsets.symmetric(horizontal: 20),
                 child: _detailProduct(context))),

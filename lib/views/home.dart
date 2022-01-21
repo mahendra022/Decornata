@@ -1,11 +1,12 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:decornata/controllers/cartController.dart';
 import 'package:decornata/controllers/productController.dart';
+import 'package:decornata/controllers/recomendProductController.dart';
 import 'package:decornata/utilitis/animation.dart';
 import 'package:decornata/utilitis/color.dart';
 import 'package:decornata/utilitis/widget.dart';
 import 'package:decornata/views/cart.dart';
-import 'package:decornata/views/productTile.dart';
+import 'package:decornata/views/productView.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -23,6 +24,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  PageController? pageController;
+
   Widget _navbar(context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -31,8 +34,8 @@ class _HomeState extends State<Home> {
         Container(
           margin: EdgeInsets.only(left: 10, top: 3),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: color4.withOpacity(0.3),
+            borderRadius: BorderRadius.circular(10),
+            color: color4.withOpacity(0.2),
           ),
           child: SizedBox(
             height: 35,
@@ -50,7 +53,7 @@ class _HomeState extends State<Home> {
                 Container(
                   margin: const EdgeInsets.only(left: 10),
                   child: Text(
-                    'Cari Tatakan',
+                    'Search eyebrow',
                     style: TextStyle(color: Colors.black54),
                   ),
                 )
@@ -58,63 +61,89 @@ class _HomeState extends State<Home> {
             ),
           ),
         ),
-        SizedBox(
-          width: 10,
-        ),
         Row(
           children: [
             Container(
               margin: EdgeInsets.only(bottom: 10),
-              child: SizedBox(
-                  height: 40,
-                  width: 40,
-                  child: Consumer<CartController>(
-                    builder: (context, value, child) => Badge(
-                      value: value.mountQty.toString(),
-                      color: Colors.red,
-                      child: IconButton(
-                          splashColor: Colors.transparent,
-                          highlightColor: Colors.transparent,
-                          padding: EdgeInsets.all(0),
-                          icon: Icon(
-                            Icons.favorite_border,
-                            color: color4,
-                          ),
-                          onPressed: () {
-                            Navigator.of(context)
-                                .push(_route.sliderDown(Cart()));
-                          }),
-                    ),
-                  )),
+              child: Consumer<CartController>(
+                builder: (context, value, child) => Badge(
+                  value: value.mountQty.toString(),
+                  color: Colors.red,
+                  child: SizedBox(
+                    height: 40,
+                    width: 35,
+                    child: IconButton(
+                        splashColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
+                        padding: EdgeInsets.all(0),
+                        icon: Icon(
+                          Icons.favorite_border,
+                          color: color4,
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).push(_route.sliderDown(Cart()));
+                        }),
+                  ),
+                ),
+              ),
             ),
             Container(
               margin: EdgeInsets.only(right: 10, bottom: 10),
-              child: SizedBox(
-                  height: 40,
-                  width: 40,
-                  child: Consumer<CartController>(
-                    builder: (context, value, child) => Badge(
-                      value: value.mountQty.toString(),
-                      color: Colors.red,
-                      child: IconButton(
-                          splashColor: Colors.transparent,
-                          highlightColor: Colors.transparent,
-                          padding: EdgeInsets.all(0),
-                          icon: Icon(
-                            Icons.shopping_bag_outlined,
-                            color: color4,
-                          ),
-                          onPressed: () {
-                            Navigator.of(context)
-                                .push(_route.sliderDown(Cart()));
-                          }),
-                    ),
-                  )),
+              child: Consumer<CartController>(
+                builder: (context, value, child) => Badge(
+                  value: value.mountQty.toString(),
+                  color: Colors.red,
+                  child: SizedBox(
+                    height: 40,
+                    width: 35,
+                    child: IconButton(
+                        splashColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
+                        padding: EdgeInsets.all(0),
+                        icon: Icon(
+                          Icons.shopping_bag_outlined,
+                          color: color4,
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).push(_route.sliderDown(Cart()));
+                        }),
+                  ),
+                ),
+              ),
             ),
           ],
         ),
       ],
     );
+  }
+
+  Widget _recomendProduct(context) {
+    final productData = Provider.of<RecomendProductController>(context);
+    final allProduct = productData.allProduct;
+    if (allProduct == null) {
+      productData.fatchProduct();
+      return Container(
+        height: MediaQuery.of(context).size.height / 3,
+        child: Center(
+            child: CircularProgressIndicator(
+          backgroundColor: Colors.black38,
+          color: color1,
+          strokeWidth: 4,
+        )),
+      );
+    }
+    return SizedBox(
+        height: 250,
+        child: ListView.builder(
+          controller: pageController,
+          itemCount: 9,
+          physics: BouncingScrollPhysics(),
+          scrollDirection: Axis.horizontal,
+          itemBuilder: (context, index) {
+            return ChangeNotifierProvider.value(
+                value: allProduct[index], child: RecomendProduct());
+          },
+        ));
   }
 
   Widget _viewProduct(context) {
@@ -204,9 +233,12 @@ class _HomeState extends State<Home> {
                   return Container(
                     width: MediaQuery.of(context).size.width,
                     padding: EdgeInsets.symmetric(horizontal: 4),
-                    child: Image.network(
-                      item,
-                      fit: BoxFit.cover,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8.0),
+                      child: Image.network(
+                        item,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   );
                 }).toList(),
@@ -215,19 +247,80 @@ class _HomeState extends State<Home> {
             SizedBox(
               height: 20,
             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Flash Sale!',
+                    style: TextStyle(
+                        fontSize: 15,
+                        letterSpacing: 2,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black),
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(right: 10),
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'See All',
+                    style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                        color: color1),
+                  ),
+                ),
+              ],
+            ),
+            _recomendProduct(context),
+            SizedBox(
+              height: 10,
+            ),
             Container(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                'Recomendation',
-                style: TextStyle(
-                    fontSize: 20,
-                    letterSpacing: 2,
-                    fontWeight: FontWeight.w600,
-                    color: color1),
+              margin: EdgeInsets.symmetric(horizontal: 2),
+              child: SizedBox(
+                height: 100,
+                width: double.infinity,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8.0),
+                  child: Image.asset(
+                    'assets/images/banner1.png',
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
             ),
             SizedBox(
-              height: 5,
+              height: 20,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Special For You!',
+                    style: TextStyle(
+                        fontSize: 15,
+                        letterSpacing: 1,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black),
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(right: 10),
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'See All',
+                    style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                        color: color1),
+                  ),
+                ),
+              ],
             ),
             _viewProduct(context),
           ],

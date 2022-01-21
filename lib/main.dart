@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'controllers/cartController.dart';
+import 'controllers/recomendProductController.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,6 +32,9 @@ class MyApp extends StatelessWidget {
           ),
           ChangeNotifierProvider<CartController>(
             create: (context) => CartController(),
+          ),
+          ChangeNotifierProvider<RecomendProductController>(
+            create: (context) => RecomendProductController(),
           ),
         ],
         child: MaterialApp(
