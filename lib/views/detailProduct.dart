@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 final _route = AnimationRoute();
 
 class DetailProduct extends StatelessWidget {
-  Widget _navbar(context) {
+  _navbar(context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -19,11 +19,11 @@ class DetailProduct extends StatelessWidget {
         Row(
           children: [
             Container(
-              margin: EdgeInsets.only(left: 10, bottom: 5),
+              margin: EdgeInsets.only(left: 5, bottom: 5),
               child: IconButton(
                   icon: Icon(
                     Icons.arrow_back,
-                    color: Colors.white,
+                    color: color4,
                   ),
                   onPressed: () {
                     Navigator.pop(context);
@@ -34,7 +34,7 @@ class DetailProduct extends StatelessWidget {
                 child: Text(
                   'ITEM DETAIL',
                   style: TextStyle(
-                      color: Colors.white,
+                      color: color4,
                       fontSize: 20,
                       letterSpacing: 2,
                       fontWeight: FontWeight.w700),
@@ -53,7 +53,7 @@ class DetailProduct extends StatelessWidget {
                   width: 40,
                   child: Consumer<CartController>(
                     builder: (context, value, child) => Badge(
-                      value: value.mountQty.toString(),
+                      value: '0',
                       color: Colors.red,
                       child: IconButton(
                           splashColor: Colors.transparent,
@@ -61,11 +61,10 @@ class DetailProduct extends StatelessWidget {
                           padding: EdgeInsets.all(0),
                           icon: Icon(
                             Icons.favorite_border,
-                            color: Colors.white,
+                            color: color4,
                           ),
                           onPressed: () {
-                            Navigator.of(context)
-                                .push(_route.sliderDown(Cart()));
+                            print('ini favorite');
                           }),
                     ),
                   )),
@@ -85,7 +84,7 @@ class DetailProduct extends StatelessWidget {
                           padding: EdgeInsets.all(0),
                           icon: Icon(
                             Icons.shopping_bag_outlined,
-                            color: Colors.white,
+                            color: color4,
                           ),
                           onPressed: () {
                             Navigator.of(context)
@@ -100,28 +99,18 @@ class DetailProduct extends StatelessWidget {
     );
   }
 
-  Widget _tagLine(context) {
+  _tagLine(context) {
     final product = Provider.of<Product>(context, listen: false);
     return Column(
       children: [
         Container(
             child: Column(
           children: [
-            Container(
-              alignment: Alignment.topLeft,
-              child: Text(
-                '\$ ${product.price}',
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                    fontSize: 25, fontWeight: FontWeight.w900, color: color1),
-              ),
-            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  width: MediaQuery.of(context).size.width / 2,
+                  width: MediaQuery.of(context).size.width / 1.4,
                   child: Text(
                     product.name!,
                     maxLines: 2,
@@ -143,9 +132,11 @@ class DetailProduct extends StatelessWidget {
                           icon: !product.isFavorite
                               ? Icon(
                                   Icons.favorite_border,
+                                  size: 25,
                                 )
                               : Icon(
                                   Icons.favorite,
+                                  size: 25,
                                 ),
                           color: Colors.red[300],
                           onPressed: () {
@@ -158,6 +149,16 @@ class DetailProduct extends StatelessWidget {
                 ),
               ],
             ),
+            Container(
+              alignment: Alignment.topLeft,
+              child: Text(
+                '\$ ${product.price}',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                    fontSize: 25, fontWeight: FontWeight.w900, color: color1),
+              ),
+            ),
             Row(
               children: [
                 product.rating != null
@@ -165,7 +166,6 @@ class DetailProduct extends StatelessWidget {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        padding: const EdgeInsets.only(right: 10),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
@@ -186,8 +186,6 @@ class DetailProduct extends StatelessWidget {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 4, vertical: 2),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -212,7 +210,7 @@ class DetailProduct extends StatelessWidget {
     );
   }
 
-  Widget _description(context) {
+  _description(context) {
     final product = Provider.of<Product>(context, listen: false);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -237,7 +235,7 @@ class DetailProduct extends StatelessWidget {
     );
   }
 
-  Widget _detailProduct(context) {
+  _detailProduct(context) {
     final product = Provider.of<Product>(context, listen: false);
     return Container(
         child: Column(
@@ -278,7 +276,7 @@ class DetailProduct extends StatelessWidget {
     ));
   }
 
-  Widget _navbarBottom(context) {
+  _navbarBottom(context) {
     final product = Provider.of<Product>(context, listen: false);
     final cart = Provider.of<CartController>(context, listen: false);
     return Container(
@@ -289,7 +287,7 @@ class DetailProduct extends StatelessWidget {
         child: Row(
           children: [
             Material(
-              color: color2,
+              color: color1,
               borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(10),
                   topLeft: Radius.circular(10)),
@@ -324,7 +322,7 @@ class DetailProduct extends StatelessWidget {
             ),
             Expanded(
               child: Material(
-                color: color1,
+                color: color4,
                 borderRadius: BorderRadius.only(
                     bottomRight: Radius.circular(10),
                     topRight: Radius.circular(10)),
@@ -361,7 +359,7 @@ class DetailProduct extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           elevation: 0,
-          backgroundColor: color1,
+          backgroundColor: Colors.white,
           bottom: PreferredSize(
             preferredSize: Size.fromHeight(5),
             child: Center(child: _navbar(context)),

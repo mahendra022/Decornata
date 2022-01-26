@@ -1,12 +1,83 @@
 import 'package:decornata/controllers/cartController.dart';
 import 'package:decornata/models/cart_model.dart';
+import 'package:decornata/models/product_model.dart';
 import 'package:decornata/utilitis/alert.dart';
+import 'package:decornata/utilitis/animation.dart';
 import 'package:decornata/utilitis/color.dart';
+import 'package:decornata/utilitis/widget.dart';
+import 'package:decornata/views/detailProduct.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+final _route = AnimationRoute();
+
 class Cart extends StatelessWidget {
-  Widget _navbarBottom(context) {
+  _navbar(context) {
+    final cart = Provider.of<CartController>(context);
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            Container(
+              margin: EdgeInsets.only(left: 5, bottom: 5),
+              child: IconButton(
+                  icon: Icon(
+                    Icons.arrow_back,
+                    color: color4,
+                  ),
+                  onPressed: () {
+                    _exit(context, cart);
+                  }),
+            ),
+            Container(
+                margin: EdgeInsets.only(left: 10, bottom: 5),
+                child: Text(
+                  'MY CART',
+                  style: TextStyle(
+                      color: color4,
+                      fontSize: 20,
+                      letterSpacing: 2,
+                      fontWeight: FontWeight.w700),
+                )),
+          ],
+        ),
+        SizedBox(
+          width: 10,
+        ),
+        Row(
+          children: [
+            Container(
+              margin: EdgeInsets.only(top: 5, right: 10),
+              child: SizedBox(
+                  height: 40,
+                  width: 40,
+                  child: Consumer<CartController>(
+                    builder: (context, value, child) => Badge(
+                      value: '0',
+                      color: Colors.red,
+                      child: IconButton(
+                          splashColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          padding: EdgeInsets.all(0),
+                          icon: Icon(
+                            Icons.favorite_border,
+                            color: color4,
+                          ),
+                          onPressed: () {
+                            print('ini favorite');
+                          }),
+                    ),
+                  )),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  _navbarBottom(context) {
     return Container(
       child: SizedBox(
         height: 100,
@@ -24,11 +95,12 @@ class Cart extends StatelessWidget {
                       height: kToolbarHeight,
                       child: Center(
                         child: Text(
-                          'Total price',
+                          'Total Price',
                           style: TextStyle(
                             fontFamily: 'Sen',
                             letterSpacing: 2,
                             color: Colors.black54,
+                            fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -55,18 +127,35 @@ class Cart extends StatelessWidget {
                 ),
               ),
             ),
-            Container(
-              color: color1,
-              height: kToolbarHeight,
-              width: double.infinity,
-              child: Center(
-                child: Text(
-                  'BUY NOW',
-                  style: TextStyle(
-                    fontFamily: 'Sen',
-                    letterSpacing: 2,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
+            Consumer<CartController>(
+              builder: (context, value, child) => GestureDetector(
+                onTap: () {
+                  if (value.mount == 0.0) {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      backgroundColor: Colors.transparent,
+                      duration: const Duration(milliseconds: 2000),
+                      elevation: 0,
+                      content:
+                          SnackBarDanger(title: "Please select item for buy"),
+                    ));
+                  } else {
+                    print('HAI');
+                  }
+                },
+                child: Container(
+                  color: color1,
+                  height: kToolbarHeight,
+                  width: double.infinity,
+                  child: Center(
+                    child: Text(
+                      'BUY NOW',
+                      style: TextStyle(
+                        fontFamily: 'Sen',
+                        letterSpacing: 2,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -77,7 +166,7 @@ class Cart extends StatelessWidget {
     );
   }
 
-  Widget _tableData(context) {
+  _tableData(context) {
     final cart = Provider.of<CartController>(context, listen: true);
     final items = cart.items.values.toList();
     if (items.isEmpty) {
@@ -86,7 +175,7 @@ class Cart extends StatelessWidget {
         child: Center(
             child: Text(
           'Your cart is still empty!!',
-          style: TextStyle(color: Colors.black45, fontSize: 25),
+          style: TextStyle(color: Colors.black45, fontSize: 20),
         )),
       );
     }
@@ -101,6 +190,7 @@ class Cart extends StatelessWidget {
               create: (context) => CartModel(),
               child: Consumer<CartModel>(
                 builder: (context, product, child) => CheckboxListTile(
+                  activeColor: color1,
                   visualDensity: VisualDensity.standard,
                   controlAffinity: ListTileControlAffinity.leading,
                   value: product.selected,
@@ -116,9 +206,12 @@ class Cart extends StatelessWidget {
                           Container(
                             height: 100,
                             width: 100,
-                            child: Image.network(
-                              items[index].image!,
-                              fit: BoxFit.cover,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(5),
+                              child: Image.network(
+                                items[index].image!,
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
                           SizedBox(
@@ -128,7 +221,7 @@ class Cart extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
-                                width: MediaQuery.of(context).size.width / 2.1,
+                                width: MediaQuery.of(context).size.width / 2.3,
                                 child: Text(
                                   items[index].title!,
                                   maxLines: 2,
@@ -143,19 +236,6 @@ class Cart extends StatelessWidget {
                               ),
                               Row(
                                 children: [
-                                  Container(
-                                    child: Text(
-                                      'Quantity  ',
-                                      maxLines: 2,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w400,
-                                          color: Colors.black54),
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
                                   GestureDetector(
                                     onTap: () {
                                       if (items[index].qty! > 1) {
@@ -209,18 +289,18 @@ class Cart extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                              SizedBox(
-                                height: 5,
-                              ),
                               Container(
+                                height: 40,
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Text(
-                                      'Price  \$${items[index].price.toString()}',
-                                      maxLines: 2,
+                                      '\$${items[index].price.toString()}',
+                                      maxLines: 1,
                                       style: TextStyle(
                                           fontWeight: FontWeight.w900,
+                                          fontSize: 18,
                                           color: Colors.black54),
                                       overflow: TextOverflow.ellipsis,
                                     ),
@@ -241,6 +321,7 @@ class Cart extends StatelessWidget {
                                         },
                                         icon: Icon(
                                           Icons.delete_outlined,
+                                          color: Colors.black45,
                                           size: 18,
                                         ))
                                   ],
@@ -268,7 +349,7 @@ class Cart extends StatelessWidget {
     );
   }
 
-  Widget _cart(context) {
+  _cart(context) {
     return Column(
       children: [
         _tableData(context),
@@ -294,28 +375,16 @@ class Cart extends StatelessWidget {
       child: Scaffold(
           appBar: AppBar(
             elevation: 0,
-            backgroundColor: color1,
-            centerTitle: true,
-            leading: IconButton(
-                icon: Icon(
-                  Icons.arrow_back,
-                  color: Colors.white,
-                ),
-                onPressed: () {
-                  _exit(context, cart);
-                }),
-            title: Text(
-              'CART',
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                  color: Colors.white,
-                  letterSpacing: 2,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 17),
+            backgroundColor: Colors.white,
+            bottom: PreferredSize(
+              preferredSize: Size.fromHeight(5),
+              child: Center(child: _navbar(context)),
             ),
           ),
-          body: SingleChildScrollView(child: Container(child: _cart(context))),
+          body: SingleChildScrollView(
+              physics: BouncingScrollPhysics(),
+              child: Container(
+                  margin: EdgeInsets.only(top: 10), child: _cart(context))),
           bottomNavigationBar: _navbarBottom(context)),
     );
   }

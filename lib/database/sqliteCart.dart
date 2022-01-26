@@ -31,7 +31,6 @@
 //       String title, String? amount, String? type, String? descrption) async {
 //     final db = await SQLCart.db();
 
-//     if()
 
 //     final data = {
 //       'title': title,

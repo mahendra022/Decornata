@@ -18,10 +18,10 @@ class ProductTile extends StatelessWidget {
                 value: product, child: DetailProduct())));
       },
       child: Card(
-        color: color1,
-        elevation: 3,
+        color: color4,
+        elevation: 2,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
+          borderRadius: BorderRadius.circular(10.0),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -29,17 +29,16 @@ class ProductTile extends StatelessWidget {
             Stack(
               children: [
                 Container(
-                  height: 200,
+                  height: 150,
                   width: double.infinity,
                   clipBehavior: Clip.antiAlias,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(20),
-                        topRight: Radius.circular(20)),
+                    borderRadius:
+                        BorderRadius.vertical(top: Radius.circular(10)),
                   ),
                   child: Image.network(
                     product.imageLink!,
-                    fit: BoxFit.cover,
+                    fit: BoxFit.fill,
                   ),
                 ),
               ],
@@ -52,7 +51,7 @@ class ProductTile extends StatelessWidget {
                 maxLines: 2,
                 textAlign: TextAlign.left,
                 style:
-                    TextStyle(fontWeight: FontWeight.w500, color: Colors.white),
+                    TextStyle(fontWeight: FontWeight.w600, color: Colors.white),
                 overflow: TextOverflow.ellipsis,
               ),
             ),
@@ -97,15 +96,18 @@ class ProductTile extends StatelessWidget {
                       ],
                     ),
                   ),
-            SizedBox(height: 10),
+            SizedBox(height: 3),
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Text('\$${product.price}',
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 30, color: Colors.white)),
+                      style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700)),
                 ),
               ],
             ),
@@ -151,9 +153,12 @@ class RecomendProduct extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
               ),
-              child: Image.network(
-                product.imageLink!,
-                fit: BoxFit.fill,
+              child: ClipRRect(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
+                child: Image.network(
+                  product.imageLink!,
+                  fit: BoxFit.fill,
+                ),
               ),
             ),
             Container(

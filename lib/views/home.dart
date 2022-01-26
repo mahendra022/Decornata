@@ -16,6 +16,7 @@ List<String> cardNotif = [
   'https://image.freepik.com/free-vector/vector-realistic-cosmetic-promo-poster_33099-1346.jpg',
   'https://image.freepik.com/free-psd/top-view-makeup-mock-up-concept_23-2148685167.jpg',
 ];
+
 final _route = AnimationRoute();
 
 class Home extends StatefulWidget {
@@ -26,7 +27,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   PageController? pageController;
 
-  Widget _navbar(context) {
+  _navbar(context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -67,7 +68,7 @@ class _HomeState extends State<Home> {
               margin: EdgeInsets.only(bottom: 10),
               child: Consumer<CartController>(
                 builder: (context, value, child) => Badge(
-                  value: value.mountQty.toString(),
+                  value: '0',
                   color: Colors.red,
                   child: SizedBox(
                     height: 40,
@@ -81,7 +82,7 @@ class _HomeState extends State<Home> {
                           color: color4,
                         ),
                         onPressed: () {
-                          Navigator.of(context).push(_route.sliderDown(Cart()));
+                          print('ini Favorite');
                         }),
                   ),
                 ),
@@ -117,7 +118,7 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget _recomendProduct(context) {
+  _recomendProduct(context) {
     final productData = Provider.of<RecomendProductController>(context);
     final allProduct = productData.allProduct;
     if (allProduct == null) {
@@ -146,7 +147,7 @@ class _HomeState extends State<Home> {
         ));
   }
 
-  Widget _viewProduct(context) {
+  _viewProduct(context) {
     final productData = Provider.of<ProductController>(context);
     final allProduct = productData.allProduct;
     if (allProduct == null) {
@@ -168,7 +169,7 @@ class _HomeState extends State<Home> {
             crossAxisCount: 2,
             reverse: true,
             shrinkWrap: true,
-            itemCount: 8,
+            itemCount: 14,
             mainAxisSpacing: 8,
             crossAxisSpacing: 8,
             itemBuilder: (context, index) {
@@ -177,36 +178,11 @@ class _HomeState extends State<Home> {
             },
             staggeredTileBuilder: (index) => StaggeredTile.fit(1)),
         SizedBox(height: 10),
-        Center(
-            child: Container(
-          margin: EdgeInsets.symmetric(horizontal: 5),
-          child: SizedBox(
-            width: double.infinity,
-            height: 50,
-            child: ElevatedButton(
-              onPressed: () {},
-              child: Text(
-                'See More',
-                style: TextStyle(fontSize: 15),
-              ),
-              style: ElevatedButton.styleFrom(
-                primary: color1, //background color of button
-                //border width and color
-                elevation: 3, //elevation of button
-                shape: RoundedRectangleBorder(
-                    //to set border radius to button
-                    borderRadius: BorderRadius.circular(
-                        5)), //content padding inside button
-              ),
-            ),
-          ),
-        )),
-        SizedBox(height: 10),
       ],
     );
   }
 
-  Widget _initHome(context) {
+  _initHome(context) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 12),
       child: SingleChildScrollView(
