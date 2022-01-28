@@ -12,7 +12,7 @@ class SnackBarSuccess extends StatelessWidget {
       height: 50,
       padding: const EdgeInsets.all(1),
       decoration: BoxDecoration(
-        color: color3,
+        color: Colors.pink[600],
         boxShadow: const [
           BoxShadow(
             color: Color(0x19000000),

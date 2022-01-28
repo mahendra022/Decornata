@@ -5,7 +5,6 @@ import 'package:decornata/utilitis/alert.dart';
 import 'package:decornata/utilitis/animation.dart';
 import 'package:decornata/utilitis/color.dart';
 import 'package:decornata/utilitis/widget.dart';
-import 'package:decornata/views/detailProduct.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -95,11 +94,11 @@ class Cart extends StatelessWidget {
                       height: kToolbarHeight,
                       child: Center(
                         child: Text(
-                          'Total Price',
+                          'Total',
                           style: TextStyle(
                             fontFamily: 'Sen',
                             letterSpacing: 2,
-                            color: Colors.black54,
+                            color: Colors.black87,
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
@@ -153,6 +152,7 @@ class Cart extends StatelessWidget {
                         fontFamily: 'Sen',
                         letterSpacing: 2,
                         color: Colors.white,
+                        fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
                     ),

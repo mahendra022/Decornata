@@ -7,6 +7,7 @@ import 'package:decornata/utilitis/color.dart';
 import 'package:decornata/utilitis/widget.dart';
 import 'package:decornata/views/cart.dart';
 import 'package:decornata/views/productView.dart';
+import 'package:decornata/views/search.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -32,33 +33,38 @@ class _HomeState extends State<Home> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Container(
-          margin: EdgeInsets.only(left: 10, top: 3),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: color4.withOpacity(0.2),
-          ),
-          child: SizedBox(
-            height: 35,
-            width: MediaQuery.of(context).size.width / 1.6,
-            child: Row(
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(left: 10),
-                  child: Icon(
-                    Icons.search,
-                    color: Colors.black87,
-                    size: 20,
+        GestureDetector(
+          onTap: () {
+            Navigator.of(context).push(_route.sliderDown(SearchView()));
+          },
+          child: Container(
+            margin: EdgeInsets.only(left: 10, top: 3),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: color4.withOpacity(0.2),
+            ),
+            child: SizedBox(
+              height: 35,
+              width: MediaQuery.of(context).size.width / 1.6,
+              child: Row(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(left: 10),
+                    child: Icon(
+                      Icons.search,
+                      color: Colors.black87,
+                      size: 20,
+                    ),
                   ),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(left: 10),
-                  child: Text(
-                    'Search eyebrow',
-                    style: TextStyle(color: Colors.black54),
-                  ),
-                )
-              ],
+                  Container(
+                    margin: const EdgeInsets.only(left: 10),
+                    child: Text(
+                      'Search Product',
+                      style: TextStyle(color: Colors.black54),
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         ),
@@ -261,8 +267,8 @@ class _HomeState extends State<Home> {
                 width: double.infinity,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8.0),
-                  child: Image.asset(
-                    'assets/images/banner1.png',
+                  child: Image.network(
+                    'https://image.freepik.com/free-vector/sale-banner-with-cosmetic-products-black-silk_107791-2095.jpg',
                     fit: BoxFit.cover,
                   ),
                 ),
